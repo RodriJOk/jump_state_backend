@@ -181,4 +181,19 @@ class AuthController extends Controller
 
         return response()->json(['status' => 'success', 'message' => 'Contraseña actualizada'], 200);
     }
+
+    public function logout(){
+        // Revoca todos los tokens del usuario autenticado
+        request()->user()->tokens()->delete();
+        
+        return response()->json([
+            'message' => 'Sesión cerrada exitosamente'
+        ], 200);
+    }
+
+    public function me(){
+        return response()->json([
+            'user' => request()->user()
+        ], 200);
+    }
 }
