@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\LeaderboardController;
 use Illuminate\Support\Facades\Route;
 // use Illuminate\Http\Request;
 
@@ -27,4 +28,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // Progreso del juego
     Route::get('/user/progress', [UserController::class, 'getProgress'])->name('api.getProgress');
     Route::post('/user/progress/level/{levelId}', [UserController::class, 'saveProgress'])->name('api.saveProgress');
+    
+    // Puntuaciones y récords
+    Route::get('/user/scores', [UserController::class, 'getScores'])->name('api.getScores');
+    Route::post('/user/scores/level/{levelId}', [UserController::class, 'saveScore'])->name('api.saveScore');
+    
+    // Leaderboard
+    Route::get('/leaderboard/global', [LeaderboardController::class, 'getGlobalLeaderboard'])->name('api.globalLeaderboard');
+    Route::get('/leaderboard/level/{levelId}', [LeaderboardController::class, 'getLevelLeaderboard'])->name('api.levelLeaderboard');
 });

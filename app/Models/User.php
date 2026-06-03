@@ -99,5 +99,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserProgress::class);
     }
+
+    /**
+     * Relación con las puntuaciones del usuario
+     */
+    public function levelScores()
+    {
+        return $this->hasMany(LevelScore::class);
+    }
     
 }
