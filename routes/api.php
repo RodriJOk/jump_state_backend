@@ -4,6 +4,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 // use Illuminate\Http\Request;
 
@@ -20,8 +21,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me'])->name('api.me');
     Route::post('/change-password', [AuthController::class, 'changePassword'])->name('api.changePassword');
     
-    // Aquí puedes agregar más rutas protegidas según tus necesidades
-    // Ejemplo:
-    // Route::apiResource('cards', CardController::class);
-    // Route::apiResource('subscriptions', SubscriptionController::class);
+    //Usuario
+    Route::get('/user', [UserController::class, 'getUser'])->name('api.getUser');
+    
+    // Progreso del juego
+    Route::get('/user/progress', [UserController::class, 'getProgress'])->name('api.getProgress');
+    Route::post('/user/progress/level/{levelId}', [UserController::class, 'saveProgress'])->name('api.saveProgress');
 });

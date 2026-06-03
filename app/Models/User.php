@@ -91,5 +91,13 @@ class User extends Authenticatable
         ]);
         return $user;
     }
+
+    /**
+     * Relación con el progreso del usuario
+     */
+    public function progress()
+    {
+        return $this->hasMany(UserProgress::class);
+    }
     
 }
