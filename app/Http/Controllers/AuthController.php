@@ -49,16 +49,6 @@ class AuthController extends Controller
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
-        $data_free_usage = [
-            'id_user' => $user->id,
-            'free_spins' => 40, // Puedes ajustar este valor según tus necesidades
-        ];
-        $userUsage = UserUsage::addFreeSpins($data_free_usage);
-        if (!$userUsage) {
-            return response()->json([
-                'message' => 'Error al asignar tiros libres. Por favor, inténtelo de nuevo.'
-            ], 500);
-        }
 
         return response()->json([
             'access_token' => $token,
