@@ -100,8 +100,7 @@ class AuthController extends Controller
         ]);
     }
     public function forgetPassword(){
-
-    $data = request()->all();
+        $data = request()->all();
         $rules = [
             'email' => 'required|email',
         ];
