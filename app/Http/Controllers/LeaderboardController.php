@@ -22,7 +22,8 @@ class LeaderboardController extends Controller
         // Obtener el total de puntos por usuario
         $rankings = LevelScore::select('user_id', DB::raw('SUM(best_score) as total_score'))
             ->groupBy('user_id')
-            ->orderBy('total_score', 'desc')
+            ->havingRaw('SUM(best_score) > 0')
+            ->orderByRaw('SUM(best_score) DESC')
             ->offset($offset)
             ->limit($limit)
             ->get();
@@ -54,12 +55,14 @@ class LeaderboardController extends Controller
             
             $userRank = LevelScore::select('user_id', DB::raw('SUM(best_score) as total_score'))
                 ->groupBy('user_id')
-                ->having('total_score', '>', $userTotalScore)
+                ->havingRaw('SUM(best_score) > ?', [$userTotalScore])
                 ->count() + 1;
         }
 
-        // Total de jugadores
-        $totalPlayers = LevelScore::distinct('user_id')->count('user_id');
+        // Total de jugadores con al menos un punto
+        $totalPlayers = LevelScore::where('best_score', '>', 0)
+            ->distinct()
+            ->count('user_id');
 
         return response()->json([
             'rankings' => $formattedRankings,
@@ -81,7 +84,9 @@ class LeaderboardController extends Controller
 
         // Obtener los mejores puntajes para el nivel
         $rankings = LevelScore::where('level_id', $levelId)
-            ->orderBy('best_score', 'desc')
+            ->where('best_score', '>', 0)
+            ->orderByDesc('best_score')
+            ->orderBy('updated_at')
             ->offset($offset)
             ->limit($limit)
             ->get();
@@ -114,15 +119,17 @@ class LeaderboardController extends Controller
                 ->where('level_id', $levelId)
                 ->first();
             
-            if ($userScore) {
+            if ($userScore && $userScore->best_score > 0) {
                 $userRank = LevelScore::where('level_id', $levelId)
                     ->where('best_score', '>', $userScore->best_score)
                     ->count() + 1;
             }
         }
 
-        // Total de jugadores en este nivel
-        $totalPlayers = LevelScore::where('level_id', $levelId)->count();
+        // Total de jugadores en este nivel con puntaje
+        $totalPlayers = LevelScore::where('level_id', $levelId)
+            ->where('best_score', '>', 0)
+            ->count();
 
         return response()->json([
             'level_id' => (int) $levelId,
