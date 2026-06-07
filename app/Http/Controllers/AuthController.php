@@ -46,7 +46,7 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'acepted_terms' => $data['acepted_terms'],
-            'expo_push_token' => $data['expo_push_token'],
+            'expo_push_token' => $data['expo_push_token'] ?? null,
         ]);
 
         if(!$user){
