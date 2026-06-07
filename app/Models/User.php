@@ -28,9 +28,8 @@ class User extends Authenticatable
         'updated_at',
         'surname',
         'acepted_terms',
-        'email_verification_token',
-        'must_view_introduction',
         'password',
+        'expo_push_token'
     ];
 
     /**
@@ -40,8 +39,6 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'two_factor_secret',
-        'two_factor_recovery_codes',
         'remember_token',
     ];
 
@@ -55,7 +52,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'two_factor_confirmed_at' => 'datetime',
+            'expo_push_token' => 'string',
         ];
     }
 
@@ -83,11 +80,8 @@ class User extends Authenticatable
             'email' => $data['email'],
             'password' => $data['password'],
             'created_at' => now(),
-            'rol_id' => $data['rol_id'],
             'acepted_terms' => $data['acepted_terms'],
-            'must_view_introduction' => true,
-            'prefix' => $data['prefix'],
-            'phone' => $data['phone'],
+            'expo_push_token' => $data['expo_push_token'],
         ]);
         return $user;
     }

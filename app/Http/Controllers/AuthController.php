@@ -21,6 +21,7 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string',
             'acepted_terms' => 'required|in:true',
+            'expo_push_token' => 'nullable|string',
         ];  
         $messages = [
             'name.required' => 'El nombre es obligatorio.',
@@ -29,6 +30,7 @@ class AuthController extends Controller
             'email.unique' => 'El correo electrónico ya está en uso.',
             'password.required' => 'La contraseña es obligatoria.',
             'acepted_terms.required' => 'Debe aceptar los términos y condiciones.',
+            'expo_push_token.string' => 'El token de expo push debe ser una cadena de texto.',
         ];
 
         $validatedData = request()->validate($rules, $messages);
@@ -38,22 +40,24 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $user = User::create([
+        $user = User::createUser([
             'name' => $data['name'],
             'surname' => $data['surname'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'created_at' => now(),
             'acepted_terms' => $data['acepted_terms'],
-            'must_view_introduction' => true,
+            'expo_push_token' => $data['expo_push_token'],
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        if(!$user){
+            return response()->json([
+                'message' => 'Error al crear el usuario'
+            ], 500);
+        }
 
         return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ]);
+            'message' => 'Usuario creado exitosamente'
+        ], 200);
     }
     public function login(){
         if (!Auth::attempt(request()->only('email', 'password'))) {
