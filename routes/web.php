@@ -7,3 +7,4 @@ Route::get('/', function () {
 });
 
 Route::view('/politica-de-privacidad', 'privacy-policy')->name('privacy-policy');
+Route::view('/eliminacion-de-cuenta', 'account-deletion')->name('account-deletion');
