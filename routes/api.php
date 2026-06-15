@@ -24,6 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
     
     //Usuario
     Route::get('/user', [UserController::class, 'getUser'])->name('api.getUser');
+    Route::delete('/user/account', [UserController::class, 'destroyAccount'])->name('api.destroyAccount');
     
     // Progreso del juego
     Route::get('/user/progress', [UserController::class, 'getProgress'])->name('api.getProgress');

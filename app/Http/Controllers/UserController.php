@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\UserProgress;
 use App\Models\LevelScore;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -213,6 +215,37 @@ class UserController extends Controller
             'new_record' => $newRecord,
             'previous_best' => $previousBest,
             'current_score' => $validatedData['score'],
+        ], 200);
+    }
+
+    /**
+     * Eliminar la cuenta del usuario autenticado
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroyAccount()
+    {
+        $user = request()->user();
+
+        $validatedData = request()->validate([
+            'password' => 'required|string',
+        ]);
+
+        if (!Hash::check($validatedData['password'], $user->password)) {
+            return response()->json([
+                'message' => 'La contraseña es incorrecta',
+            ], 403);
+        }
+
+        DB::transaction(function () use ($user) {
+            $user->levelScores()->delete();
+            $user->progress()->delete();
+            $user->tokens()->delete();
+            $user->delete();
+        });
+
+        return response()->json([
+            'message' => 'Cuenta eliminada exitosamente',
         ], 200);
     }
 }
