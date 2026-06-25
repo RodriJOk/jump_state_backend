@@ -5,14 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\myEmail;
-use App\Models\UserUsage;
-use App\Models\Logs;
-use Illuminate\Support\Str;
+use App\Services\MailgunService;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Password;
 
-class AuthController extends Controller
-{
+class AuthController extends Controller{
     public function register(){
         $data = request()->all();
         $rules = [
@@ -103,7 +100,7 @@ class AuthController extends Controller
             ]
         ]);
     }
-    public function forgetPassword(){
+    public function forgetPassword(MailgunService $mailgun){
         $data = request()->all();
         $rules = [
             'email' => 'required|email',
@@ -120,25 +117,46 @@ class AuthController extends Controller
             ], 400);
         }
 
-        $data = [
-            'name' => '',
-            'date' => now(),
-            'subject' => 'Solicitud de reestablecimiento de contraseña',
-            'resetLink' => route('new_password'),
-        ];
-        $send_email = Mail::to(request()->email)->send(new myEmail($data, 'mail.reseteo_contraseña'));
-        if(!$send_email){
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Error al enviar el email'
-            ], 500);
+        $email = request()->email;
+        $user = User::where('email', $email)->first();
+
+        if ($user) {
+            $token = Password::broker()->createToken($user);
+            $resetLink = rtrim(config('app.password_reset_url'), '/')
+                . '?token=' . $token
+                . '&email=' . urlencode($email);
+
+            $html = view('mail.password-reset', [
+                'name' => $user->name,
+                'subject' => 'Solicitud de reestablecimiento de contraseña',
+                'resetLink' => $resetLink,
+                'expiresInMinutes' => config('auth.passwords.users.expire', 60),
+            ])->render();
+
+            try {
+                $mailgun->send(
+                    $email,
+                    'Solicitud de reestablecimiento de contraseña',
+                    $html,
+                    "Usa este enlace para restablecer tu contraseña: {$resetLink}"
+                );
+            } catch (\Throwable $e) {
+                Log::error('Error al enviar email de recuperación de contraseña', [
+                    'email' => $email,
+                    'error' => $e->getMessage(),
+                ]);
+
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Error al enviar el email',
+                ], 500);
+            }
         }
 
         return response()->json([
             'status' => 'success',
             'message' => 'Se ha enviado un correo para recuperar la contraseña'
         ], 200);
-
     }
     public function changePassword(){
         $data = request()->all();
@@ -174,16 +192,12 @@ class AuthController extends Controller
 
         return response()->json(['status' => 'success', 'message' => 'Contraseña actualizada'], 200);
     }
-
     public function logout(){
-        // Revoca todos los tokens del usuario autenticado
         request()->user()->tokens()->delete();
-        
         return response()->json([
             'message' => 'Sesión cerrada exitosamente'
         ], 200);
     }
-
     public function me(){
         return response()->json([
             'user' => request()->user()
