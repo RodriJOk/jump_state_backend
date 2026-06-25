@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\MailgunService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Passwords\PasswordBroker;
 
 class AuthController extends Controller{
     public function register(){
@@ -90,6 +91,10 @@ class AuthController extends Controller{
             );
         }
         $user = Auth::user();
+        if (! $user instanceof User) {
+            return response()->json(['message' => 'Usuario no autenticado'], 401);
+        }
+
         return response()->json([
             'token_type' => 'Bearer',
             'access_token' => $user->createToken('auth_token')->plainTextToken,
@@ -121,7 +126,7 @@ class AuthController extends Controller{
         $user = User::where('email', $email)->first();
 
         if ($user) {
-            $token = Password::broker()->createToken($user);
+            $token = $this->createPasswordResetToken($user);
             $resetLink = rtrim(config('app.password_reset_url'), '/')
                 . '?token=' . $token
                 . '&email=' . urlencode($email);
@@ -202,5 +207,16 @@ class AuthController extends Controller{
         return response()->json([
             'user' => request()->user()
         ], 200);
+    }
+
+    private function createPasswordResetToken(User $user): string
+    {
+        $broker = Password::broker();
+
+        if (! $broker instanceof PasswordBroker) {
+            throw new \RuntimeException('Password broker no disponible.');
+        }
+
+        return $broker->createToken($user);
     }
 }
