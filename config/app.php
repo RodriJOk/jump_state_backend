@@ -13,7 +13,18 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'JumpState'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Developer Name
+    |--------------------------------------------------------------------------
+    |
+    | Nombre del desarrollador, utilizado en políticas legales y tiendas de apps.
+    |
+    */
+
+    'developer_name' => env('APP_DEVELOPER_NAME', 'Alan Rodrigo Juarez'),
 
     /*
     |--------------------------------------------------------------------------

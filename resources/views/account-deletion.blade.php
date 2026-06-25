@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Eliminación de cuenta — {{ config('app.name', 'Juego') }}</title>
+    <title>Eliminación de cuenta — {{ config('app.name', 'JumpState') }}</title>
     <style>
         :root {
             color-scheme: light dark;
@@ -142,10 +142,10 @@
 </head>
 <body>
     <main class="container">
-        <p class="app-name">{{ config('app.name', 'Juego') }}</p>
+        <p class="app-name">{{ config('app.name', 'JumpState') }}</p>
         <h1>Eliminación de cuenta y datos</h1>
         <p class="intro">
-            En esta página puedes solicitar la eliminación de tu cuenta de {{ config('app.name', 'el juego') }}
+            En esta página puedes solicitar la eliminación de tu cuenta de {{ config('app.name', 'JumpState') }}
             y conocer qué datos se borran o conservan.
         </p>
 
@@ -161,7 +161,7 @@
                 </li>
                 <li>
                     En el mensaje, indica el <strong>correo electrónico</strong> con el que te registraste en
-                    {{ config('app.name', 'el juego') }}.
+                    {{ config('app.name', 'JumpState') }}.
                 </li>
                 <li>
                     Opcionalmente, puedes indicar el motivo de la solicitud. No es obligatorio para procesarla.
@@ -227,7 +227,10 @@
         </p>
 
         <footer>
-            <p>&copy; {{ date('Y') }} {{ config('app.name', 'Juego') }}. Todos los derechos reservados.</p>
+            <p>
+                &copy; {{ date('Y') }} {{ config('app.name', 'JumpState') }} —
+                {{ config('app.developer_name', 'Alan Rodrigo Juarez') }}. Todos los derechos reservados.
+            </p>
         </footer>
     </main>
 </body>

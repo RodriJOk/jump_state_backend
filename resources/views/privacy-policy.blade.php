@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Política de privacidad — {{ config('app.name', 'Juego') }}</title>
+    <title>Política de privacidad — {{ config('app.name', 'JumpState') }}</title>
     <style>
         :root {
             color-scheme: light dark;
@@ -49,6 +49,16 @@
             padding: 2rem 1.5rem;
         }
 
+        .app-name {
+            display: inline-block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+        }
+
         h1 {
             font-size: 1.75rem;
             margin-bottom: 0.5rem;
@@ -89,17 +99,20 @@
 </head>
 <body>
     <main class="container">
+        <p class="app-name">{{ config('app.name', 'JumpState') }}</p>
         <h1>Política de privacidad</h1>
         <p class="updated">Última actualización: {{ now()->format('d/m/Y') }}</p>
 
         <p>
-            Esta política describe cómo {{ config('app.name', 'el juego') }} recopila, utiliza y protege
+            Esta política describe cómo <strong>{{ config('app.name', 'JumpState') }}</strong> recopila, utiliza y protege
             la información personal de los usuarios que utilizan nuestra aplicación y servicios asociados.
         </p>
 
         <h2>1. Responsable del tratamiento</h2>
         <p>
-            El responsable del tratamiento de tus datos personales es el titular de {{ config('app.name', 'el juego') }}.
+            La aplicación <strong>{{ config('app.name', 'JumpState') }}</strong> es desarrollada por
+            <strong>{{ config('app.developer_name', 'Alan Rodrigo Juarez') }}</strong>, quien actúa como responsable
+            del tratamiento de tus datos personales.
             Para consultas relacionadas con privacidad, puedes contactarnos a través de los canales oficiales
             de soporte indicados en la aplicación.
         </p>
@@ -166,7 +179,7 @@
 
         <h2>9. Menores de edad</h2>
         <p>
-            El juego no está dirigido a menores de edad sin el consentimiento de sus padres o tutores legales.
+            {{ config('app.name', 'JumpState') }} no está dirigido a menores de edad sin el consentimiento de sus padres o tutores legales.
             Si detectamos que se han recopilado datos de un menor sin autorización, procederemos a eliminarlos.
         </p>
 
@@ -177,7 +190,10 @@
         </p>
 
         <footer>
-            <p>&copy; {{ date('Y') }} {{ config('app.name', 'Juego') }}. Todos los derechos reservados.</p>
+            <p>
+                &copy; {{ date('Y') }} {{ config('app.name', 'JumpState') }} —
+                {{ config('app.developer_name', 'Alan Rodrigo Juarez') }}. Todos los derechos reservados.
+            </p>
         </footer>
     </main>
 </body>
