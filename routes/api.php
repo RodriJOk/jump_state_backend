@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class, 'login'])->name('api.login');
 Route::post('/register', [AuthController::class, 'register'])->name('api.register');
 Route::post('/existing', [AuthController::class, 'existingUser'])->name('existingUser');
-Route::get('/forget_password', [AuthController::class, 'forgetPassword'])->name('forgetPassword');
+Route::post('/forget_password', [AuthController::class, 'forgetPassword'])->name('forgetPassword');
 
 // Rutas protegidas (requieren autenticación con Sanctum)
 Route::middleware('auth:sanctum')->group(function () {
