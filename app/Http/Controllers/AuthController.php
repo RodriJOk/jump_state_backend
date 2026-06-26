@@ -158,7 +158,7 @@ class AuthController extends Controller{
 
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Error al enviar el email',
+                    'message' => 'Error al enviar el email ' . $e->getMessage(),
                 ], 500);
             }
         }
