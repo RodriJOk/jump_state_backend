@@ -127,11 +127,6 @@ class AuthController extends Controller{
 
         if ($user) {
             $token = $this->createPasswordResetToken($user);
-            return response()->json([
-                'status' => 'success',
-                'token' => $token,
-                'message' => 'Se ha enviado un correo para recuperar la contraseña'
-            ], 200);
             $resetLink = rtrim(config('app.password_reset_url'), '/')
                 . '?token=' . $token
                 . '&email=' . urlencode($email);
